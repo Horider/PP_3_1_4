@@ -1,15 +1,14 @@
 package ru.kata.spring.boot_security.demo.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import java.util.Set;
+import java.util.Collection;
 @Data
-@AllArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
@@ -19,21 +18,30 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    @Size(min = 2, message = "Не меньше 5 знаков")
-    @Column(name = "username")
-    private String username;
+    @Size(min = 5, message = "Не меньше 2 знаков")
+    @Column(name = "name")
+    private String name;
 
-    @Size(min = 2, message = "Не меньше 5 знаков")
-    @Column(name = "id")
+    @Size(min = 5, message = "Не меньше 5 знаков")
+    @Column(name = "password")
     @NotEmpty
     private String password;
 
-    @Transient
-    private String passwordConfirm;
+    @Column(name = "email")
+    @Email
+    private String email;
+
+    public User(Long id, String name, String password, String email) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.email = email;
+    }
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Role> roles;
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "users_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Collection<Role> roles;
 
-    public User() {
-    }
 }

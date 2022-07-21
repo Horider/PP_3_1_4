@@ -1,30 +1,20 @@
 package ru.kata.spring.boot_security.demo.models;
 
 import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "role")
-public class Role implements GrantedAuthority {
+@Table(name = "roles")
+public class Role {
 
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name")
     private String name;
 
-    @Transient
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
 
-
-    @Override
-    public String getAuthority() {
-        return this.getName();
-    }
 }
