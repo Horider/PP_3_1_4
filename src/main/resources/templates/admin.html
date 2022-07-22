@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+</head>
+<body th:align="center">
+<table th:align="center" th:border="2">
+    <caption>List of users</caption>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Password</th>
+        <th>Role</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="u : ${allUsers}">
+        <tr>
+            <th th:text="${u.getName()}">
+            </th>
+            <th th:text="${u.getEmail()}">
+            </th>
+            <th th:text="${u.getPassword()}">
+            </th>
+            <th th:text="${u.roles}">
+            </th>
+            <th>
+                <form th:method="GET" th:action="@{/admin/edit/{id}(id=${u.getId()})}">
+                    <input th:type="submit" th:value="Edit"/>
+                </form>
+
+            </th>
+            <th>
+                <form th:method="POST" th:action="@{/admin/remove/{id}(id=${u.getId()})}">
+                    <input th:type="submit" th:value="Delete"/>
+                </form>
+            </th>
+        </tr>
+    </th:block>
+    </tbody>
+</table>
+<br>
+<button>
+    <a th:href="@{/admin/add}" class="btn btn-danger">Add</a>
+</button>
+<br>
+<br>
+<button>
+    <a th:href="@{/logout}">Logout</a>
+</button>
+<br>
+</body>
+</html>

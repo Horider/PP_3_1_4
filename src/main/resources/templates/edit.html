@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit</title>
+</head>
+<body th:align="center">
+<form method="post" th:action="@{/admin/edit/{id}(id=${user.getId()})}" th:object="${user}">
+    <span>Name</span>
+    <input type="text" th:field="*{name}" id="name"/>
+    <br>
+    <span>Email</span>
+    <input type="text" th:field="*{email}" id="surname"/>
+    <br>
+    <span>Password</span>
+    <input type="text" th:field="*{password}" id="password"/>
+    <br>
+    <input type="submit" value="Accept changes"/>
+</form>
+<br>
+<button>
+    <a th:href="@{/logout}">Logout</a>
+</button>
+<br>
+</body>
+</html>
