@@ -21,6 +21,7 @@ import javax.persistence.PersistenceContext;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -80,17 +81,29 @@ public class AppService implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email);
 
         if (user == null) {
-            throw new UsernameNotFoundException(String.format("User '%s' not found", username));
+            throw new UsernameNotFoundException(String.format("User '%s' not found", email));
         }
-        return user;
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(), user.getPassword(), user.getAuthorities());
+    }
+
+    public User getUserByEmail(String email) {
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email));
+
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            throw new UsernameNotFoundException(String.format("User with email '%s' not found", email));
+        }
     }
 
     private static Collection<? extends GrantedAuthority> getAuthorities(User user) {
-        String[] userRoles = user.getRoles().stream().map(Role::getName).toArray(String[]::new);
-        return AuthorityUtils.createAuthorityList(userRoles);
+        String[] userRoles = user.getRoles().stream().map((role) -> role.getName()).toArray(String[]::new);
+        Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(userRoles);
+        return authorities;
     }
 }

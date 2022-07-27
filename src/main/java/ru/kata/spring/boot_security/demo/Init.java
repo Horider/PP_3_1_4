@@ -40,9 +40,9 @@ public class Init {
         roleRepository.save(roleAdmin);
 
         // Пароль - имя юзера
-        User admin = new User("admin", "test2", "Test2@mail.ru",
+        User admin = new User("admin", "test2", 30, "admin@mail.ru",
                 "$2a$12$R7UwBqhVMUHlvoyQrwnT9upAry2qvrDLdRkN6YFd0TEdyOWqCUdya");
-        User user = new User("user", "test1", "Test1@mail.ru",
+        User user = new User("user", "test1", 28, "user@mail.ru",
                 "$2a$12$jl2mZEZR2p3uVnyWGgz/s.BGm7nhqzPC.Y5CqZsEoNpqLHBFkhs9O");
 
         user.setRoles(userRoles);

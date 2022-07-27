@@ -23,6 +23,8 @@ public class User implements UserDetails {
     private String username;
     @Column(name = "lastname")
     private String lastName;
+    @Column(name = "age")
+    private int age;
     @Column(name = "email")
     private String email;
     @Column(name = "pass")
@@ -38,9 +40,10 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String username, String lastName, String email, String password) {
+    public User(String username, String lastName, int age, String email, String password) {
         this.username = username;
         this.lastName = lastName;
+        this.age = age;
         this.email = email;
         this.password = password;
     }
@@ -80,5 +83,15 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public List<String> getRolesName() {
+        List<Role> rolese = getRoles();
+        List<String> resultRole = new ArrayList<>();
+        for(Role role : rolese) {
+            resultRole.add(
+                    role.getName().replaceFirst("ROLE_", "")) ;
+        }
+        return resultRole;
     }
 }
