@@ -39,7 +39,8 @@ public class Init {
         roleRepository.save(roleUser);
         roleRepository.save(roleAdmin);
 
-        // Пароль - имя юзера
+        // Логин - Емайл. Пароль - имя
+
         User admin = new User("admin", "test2", 30, "admin@mail.ru",
                 "$2a$12$R7UwBqhVMUHlvoyQrwnT9upAry2qvrDLdRkN6YFd0TEdyOWqCUdya");
         User user = new User("user", "test1", 28, "user@mail.ru",

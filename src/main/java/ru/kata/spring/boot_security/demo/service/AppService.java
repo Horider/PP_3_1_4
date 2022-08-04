@@ -61,7 +61,7 @@ public class AppService implements UserDetailsService {
     }
 
     @Transactional
-    public void saveRole(Role role) {
+    public void saveRole(User role) {
         entityManager.persist(role);
     }
 
