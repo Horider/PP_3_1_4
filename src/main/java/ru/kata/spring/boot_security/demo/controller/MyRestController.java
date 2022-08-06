@@ -1,11 +1,12 @@
-package ru.kata.spring.boot_security.demo.rest_controller;
+package ru.kata.spring.boot_security.demo.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.service.AppService;
+import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
+import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
 import java.security.Principal;
 import java.util.List;
@@ -14,43 +15,45 @@ import java.util.List;
 @RequestMapping("/api")
 public class MyRestController {
 
-    private final AppService appService;
+    private final UserServiceImpl userService;
+    private final RoleServiceImpl roleService;
 
     @Autowired
-    public MyRestController(AppService appService) {
-        this.appService = appService;
+    public MyRestController(UserServiceImpl usersService, RoleServiceImpl roleService) {
+        this.userService = usersService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/users")
     public List<User> showAllUsers() {
-        return appService.getAllUsers();
+        return userService.findAllUsers();
     }
 
     @GetMapping("/roles")
     public List<Role> showAllRoles() {
-        return appService.listRoles();
+        return roleService.findAllRoles();
     }
 
     @GetMapping("/userinfo")
     public User showUserInfo(Principal principal) {
-        return appService.getUserByEmail(principal.getName());
+        return userService.findByName(principal.getName());
     }
 
     @PostMapping("/users/newuser")
     public User addNewUser(@RequestBody User user) {
-        appService.saveUser(user);
+        userService.addUser(user);
         return user;
     }
 
     @PutMapping("/users/edituser")
     public User editUser(@RequestBody User user) {
-        appService.saveRole(user);
+        userService.updateUser(user);
         return user;
     }
 
     @DeleteMapping("/users/delete/{id}")
     public String deleteUser(@PathVariable(value = "id") long id) {
-        appService.removeUser(id);
+        userService.removeUserById(id);
         return "User with id " + id + " was deleted.";
     }
 }
