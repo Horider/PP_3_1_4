@@ -20,7 +20,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role findBiId(Long id) {
+    public Role findBiId(int id) {
         return roleRepository.findById(id).get();
     }
 
@@ -41,9 +41,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void saveAll(Collection<Role> roles) {
-        for (Role role : roles) {
-            roleRepository.save(role);
-        }
+        roleRepository.saveAll(roles);
     }
 
 

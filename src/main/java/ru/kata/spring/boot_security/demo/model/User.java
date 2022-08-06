@@ -1,67 +1,74 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-@Data
-@Entity
-@Table(name = "user_security")
-public class User implements UserDetails {
+import java.util.HashSet;
 
+@Entity
+//@Data
+@Table(name = "users")
+public class User implements UserDetails, Serializable {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(name = "username")
-    private String username;
-    @Column(name = "lastname")
+    private long id;
+    @Column(name = "first_name")
+    private String firstName;
+    @Column(name = "last_name")
     private String lastName;
     @Column(name = "age")
     private int age;
     @Column(name = "email")
     private String email;
-    @Column(name = "pass")
+    @Column(name = "password")
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Collection<Role> roles;
 
-    private List<Role> roles = new ArrayList<>();
 
     public User() {
     }
 
-    public User(String username, String lastName, int age, String email, String password) {
-        this.username = username;
+    public User(String firstName, String lastName, int age, String email, String password, Collection<Role> roles) {
+        this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
         this.email = email;
         this.password = password;
+        this.roles = roles;
+    }
+
+    @Override
+    @JsonIgnore
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getRoles();
     }
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
-                .collect(Collectors.toList());
+    public String getRolesString() {
+        StringBuilder sb = new StringBuilder();
+        for (Role role : roles) {
+            if (role.getRole().contains("ROLE_ADMIN")) {
+                sb.append("Admin");
+            } else if (role.getRole().contains("ROLE_USER")) {
+                sb.append("User");
+            }
+            sb.append("; ");
+        }
+        return sb.toString().trim();
     }
 
     @Override
@@ -84,13 +91,74 @@ public class User implements UserDetails {
         return true;
     }
 
-    public List<String> getRolesName() {
-        List<Role> rolese = getRoles();
-        List<String> resultRole = new ArrayList<>();
-        for(Role role : rolese) {
-            resultRole.add(
-                    role.getName().replaceFirst("ROLE_", "")) ;
-        }
-        return resultRole;
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
+                ", roles=" + getRolesString() +
+                '}';
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
     }
 }

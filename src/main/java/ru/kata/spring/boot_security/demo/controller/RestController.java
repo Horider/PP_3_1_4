@@ -1,26 +1,25 @@
 package ru.kata.spring.boot_security.demo.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
-import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
+import ru.kata.spring.boot_security.demo.service.RoleService;
+import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.security.Principal;
 import java.util.List;
 
-@RestController
+@org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api")
-public class MyRestController {
+public class RestController {
 
-    private final UserServiceImpl userService;
-    private final RoleServiceImpl roleService;
+    private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
-    public MyRestController(UserServiceImpl usersService, RoleServiceImpl roleService) {
-        this.userService = usersService;
+    public RestController(UserService userService, RoleService roleService) {
+        this.userService = userService;
         this.roleService = roleService;
     }
 
@@ -36,7 +35,7 @@ public class MyRestController {
 
     @GetMapping("/userinfo")
     public User showUserInfo(Principal principal) {
-        return userService.findByName(principal.getName());
+        return userService.findByEmail(principal.getName());
     }
 
     @PostMapping("/users/newuser")
@@ -46,7 +45,7 @@ public class MyRestController {
     }
 
     @PutMapping("/users/edituser")
-    public User editUser(@RequestBody User user) {
+    public User updateUser(@RequestBody User user) {
         userService.updateUser(user);
         return user;
     }
