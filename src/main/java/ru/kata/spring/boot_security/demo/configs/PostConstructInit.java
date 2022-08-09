@@ -8,6 +8,7 @@ import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.annotation.PostConstruct;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -41,11 +42,16 @@ public class PostConstructInit {
             anyRole.add(user);
             roleService.saveRole(admin);
             roleService.saveRole(user);
-            userService.addUser(new User("Maha", "Smirnova", 33, "admin@mail.ru", "admin@mail.ru", adminRole));
-            userService.addUser(new User("Misha", "Krokodilov", 24, "user@mail.ru", "user@mail.ru", userRole));
-            userService.addUser(new User("Dima", "Borisov", 18, "dimab@mail.ru", "dimab@mail.ru", userRole));
-            userService.addUser(new User("Vasya", "Pupkin", 16, "vasyap@mail.ru", "vasyap@mail.ru", userRole));
-            userService.addUser(new User("Kostya", "Gradov", 52, "kostyag@mail.ru", "kostyag@mail.ru", anyRole));
+
+
+            for (User user1 : Arrays.asList(
+                    new User("Maha", "Smirnova", 33, "admin@mail.ru", "admin@mail.ru", adminRole),
+                    new User("Misha", "Krokodilov", 24, "user@mail.ru", "user@mail.ru", userRole),
+                    new User("Dima", "Borisov", 18, "dimab@mail.ru", "dimab@mail.ru", userRole),
+                    new User("Vasya", "Pupkin", 16, "vasyap@mail.ru", "vasyap@mail.ru", userRole),
+                    new User("Kostya", "Gradov", 52, "kostyag@mail.ru", "kostyag@mail.ru", anyRole))) {
+                userService.addUser(user1);
+            }
         }
     }
 }

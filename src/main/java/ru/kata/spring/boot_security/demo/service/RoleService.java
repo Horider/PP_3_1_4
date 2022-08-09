@@ -6,9 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 public interface RoleService {
-    Role findBiId(int id);
-
-    Role findByRole(String role);
+    Collection<Role> findByRole(String role);
 
     List<Role> findAllRoles();
 

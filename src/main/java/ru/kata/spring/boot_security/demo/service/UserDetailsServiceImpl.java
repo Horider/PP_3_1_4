@@ -13,18 +13,19 @@ import ru.kata.spring.boot_security.demo.reposirory.UserRepository;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
 
     @Autowired
-    public UserDetailsServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email);
-        user.setRoles(roleRepository.findAllByUsersId(user.getId()));
-        return user;
+        if (user == null) {
+            throw new UsernameNotFoundException(String.format("User with email '%s' not found!", email));
+        }
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(), user.getPassword(), user.getAuthorities());
     }
 }
